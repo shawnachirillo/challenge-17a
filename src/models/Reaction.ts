@@ -1,66 +1,27 @@
-import mongoose, { Schema, Document } from 'mongoose';
+// src/models/Reaction.ts
+import { Schema, Types } from 'mongoose';
+import dayjs from 'dayjs';
 
-export interface IUser extends Document {
-  username: string;
-  email: string;
-  thoughts: mongoose.Types.ObjectId[];
-  friends: mongoose.Types.ObjectId[];
-}
-
-const UserSchema: Schema<IUser> = new Schema({
+export const ReactionSchema = new Schema({
+  reactionId: {
+    type: Schema.Types.ObjectId,
+    default: () => new Types.ObjectId(),
+  },
+  reactionBody: {
+    type: String,
+    required: true,
+    maxlength: 280,
+  },
   username: {
     type: String,
     required: true,
-    unique: true,
-    trim: true
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-    match: [/.+@.+\..+/, 'Must match a valid email address!']
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    get: (timestamp: Date) => dayjs(timestamp).format('MMM D, YYYY [at] h:mm A'),
   },
-  thoughts: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'Thought'
-    }
-  ],
-  friends: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ]
 }, {
-  toJSON: { virtuals: true },
-  id: false
+  toJSON: { getters: true },
+  id: false,
 });
-
-UserSchema.virtual('friendCount').get(function () {
-  return this.friends.length;
-});
-export const ReactionSchema = new Schema({
-
-    reactionBody: {
-  
-      type: String,
-      required: true,
-      maxlength: 280
-    },
-
-    username: {
-      type: String,
-    },
-
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
-
-});
-
-    
-  
-
-export const User = mongoose.model<IUser>('User', UserSchema);

@@ -9,7 +9,7 @@ export interface IThought extends Document {
   reactions: typeof ReactionSchema[];
 }
 
-const ThoughtSchema: Schema<IThought> = new Schema(
+const ThoughtSchema: Schema = new Schema(
   {
     thoughtText: {
       type: String,
@@ -18,11 +18,16 @@ const ThoughtSchema: Schema<IThought> = new Schema(
       maxlength: 280
     },
     createdAt: {
-        type: Date,
-        default: Date.now,
-        get: (timestamp: Date) => dayjs(timestamp).format('MMM D, YYYY [at] h:mm A')
-      } as any
-      
+      type: Date,
+      default: Date.now,
+      get: (timestamp: Date): string =>
+        dayjs(timestamp).format('MMM D, YYYY [at] h:mm A')
+    },
+    username: {
+      type: String,
+      required: true
+    },
+    reactions: [ReactionSchema]
   },
   {
     toJSON: {
@@ -33,7 +38,7 @@ const ThoughtSchema: Schema<IThought> = new Schema(
   }
 );
 
-ThoughtSchema.virtual('reactionCount').get(function () {
+ThoughtSchema.virtual('reactionCount').get(function (this: any) {
   return this.reactions.length;
 });
 

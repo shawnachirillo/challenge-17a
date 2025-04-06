@@ -1,3 +1,4 @@
+// src/models/User.ts
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IUser extends Document {
@@ -7,38 +8,38 @@ export interface IUser extends Document {
   friends: mongoose.Types.ObjectId[];
 }
 
-const UserSchema: Schema<IUser> = new Schema({
+const UserSchema = new Schema<IUser>({
   username: {
     type: String,
     required: true,
     unique: true,
-    trim: true
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     unique: true,
-    match: [/.+@.+\..+/, 'Must match a valid email address!']
+    match: [/.+@.+\..+/, 'Must match a valid email address!'],
   },
   thoughts: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Thought'
-    }
+      ref: 'Thought',
+    },
   ],
   friends: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'User'
-    }
-  ]
+      ref: 'User',
+    },
+  ],
 }, {
   toJSON: { virtuals: true },
-  id: false
+  id: false,
 });
 
 UserSchema.virtual('friendCount').get(function () {
   return this.friends.length;
 });
 
-export const User = mongoose.model<IUser>('User', UserSchema);
+export const User = mongoose.models.User || mongoose.model<IUser>('User', UserSchema);
