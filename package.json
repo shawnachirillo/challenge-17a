@@ -10,8 +10,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "apollo-server-express": "^3.13.0",
     "dayjs": "^1.11.13",
-    "express": "^5.1.0",
+    "express": "^4.21.2",
     "mongoose": "^8.13.2"
   },
   "devDependencies": {

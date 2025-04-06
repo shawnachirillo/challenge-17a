@@ -9,7 +9,7 @@ router.use('/users', userRoutes);
 router.use('/thoughts', thoughtRoutes);
 
 router.get('/ping', (req, res) => {
-    res.send('Server is alive 🧠');
+    res.send('Server is alive ');
   });
   
 export default router;
